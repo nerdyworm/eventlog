@@ -21,7 +21,8 @@ defmodule Eventlog.Storage do
     case Dynamo.put_item(@table, packed, opts) |> ExAws.request do
       {:ok, results} ->
         consumed = results["ConsumedCapacity"]["CapacityUnits"]
-        :ok = Logger.debug "[write] stream_uuid=#{commit.stream_uuid} stream_version=#{commit.stream_version} events=#{commit.count} consumed=#{consumed} runtime=#{:os.system_time(:milli_seconds) - start}ms"
+        # :ok = Logger.debug "[write] stream_uuid=#{commit.stream_uuid} stream_version=#{commit.stream_version} events=#{commit.count} consumed=#{consumed} runtime=#{:os.system_time(:milli_seconds) - start}ms"
+        :ok = Logger.info "[write] stream_uuid=#{commit.stream_uuid} stream_version=#{commit.stream_version} events=#{commit.count} consumed=#{consumed} runtime=#{:os.system_time(:milli_seconds) - start}ms"
 
       {:error, {"ConditionalCheckFailedException", _}} ->
         {:error, :version_conflict}
