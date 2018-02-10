@@ -20,25 +20,15 @@ defmodule Eventlog.Store do
   end
 
   def read_stream_forward(stream_uuid, limit) do
-    GenServer.call(__MODULE__, {:forward, stream_uuid, limit})
+    Storage.read_stream_forward(stream_uuid, -1, limit)
   end
 
   def read_stream_backward(stream_uuid, limit) do
-    GenServer.call(__MODULE__, {:backward, stream_uuid, limit})
+    Storage.read_stream_backward(stream_uuid, limit)
   end
 
   def handle_call({:append, stream_uuid, stream_version, events}, _, state) do
     result = Storage.append(stream_uuid, stream_version, events)
-    {:reply, result, state}
-  end
-
-  def handle_call({:forward, stream_uuid, limit}, _, state) do
-    result = Storage.read_stream_forward(stream_uuid, -1, limit)
-    {:reply, result, state}
-  end
-
-  def handle_call({:backward, stream_uuid, limit}, _, state) do
-    result = Storage.read_stream_backward(stream_uuid, limit)
     {:reply, result, state}
   end
 
