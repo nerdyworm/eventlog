@@ -7,6 +7,10 @@ defmodule Eventlog do
     Eventlog.Store.append(stream_uuid, timestamp(), events, timeout)
   end
 
+  def append_async(stream_uuid, events) do
+    Eventlog.Store.append_async(stream_uuid, timestamp(), events)
+  end
+
   def setup do
     name = Application.get_env(:eventlog, :table)
 

@@ -15,6 +15,10 @@ defmodule Eventlog.Store do
     GenServer.call(__MODULE__, {:append, stream_uuid, stream_version, events}, timeout)
   end
 
+  def append_async(stream_uuid, stream_version, events) do
+    GenServer.cast(__MODULE__, {:append, stream_uuid, stream_version, events})
+  end
+
   def read_stream_forward(stream_uuid, limit) do
     GenServer.call(__MODULE__, {:forward, stream_uuid, limit})
   end
@@ -36,5 +40,10 @@ defmodule Eventlog.Store do
   def handle_call({:backward, stream_uuid, limit}, _, state) do
     result = Storage.read_stream_backward(stream_uuid, limit)
     {:reply, result, state}
+  end
+
+  def handle_cast({:append, stream_uuid, stream_version, events}, state) do
+    :ok = Storage.append(stream_uuid, stream_version, events)
+    {:noreply, state}
   end
 end
