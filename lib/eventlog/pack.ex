@@ -1,22 +1,28 @@
 defmodule Eventlog.Pack do
-  alias Eventlog.{Event, Commit, CommitRecord}
+  alias Eventlog.{Encoder, Event, Commit, CommitRecord}
 
-  def pack(%Commit{events: events} = commit) do
+  def pack(%Commit{events: events} = commit) when is_list(events) do
     %Commit{commit | events: events |> pack()}
   end
 
   def pack(events) when is_list(events) do
-    Enum.map(events, &pack/1)
+    events
+    |> Enum.map(&pack/1)
+    |> Encoder.encode()
   end
 
   def pack(%CommitRecord{data: data} = event) do
     %CommitRecord{event | data: encode(data)}
   end
 
-  def unpack(%Commit{events: events} = commit) do
-    Enum.map(events, fn(event) ->
-      unpack(event, commit)
-    end)
+  def unpack(%Commit{events: events} = commit) when is_binary(events) do
+    events
+    |> Encoder.decode()
+    |> Enum.map(&(unpack(&1, commit)))
+  end
+
+  def unpack(%Commit{events: events} = commit) when is_list(events) do
+    Enum.map(events, &(unpack(&1, commit)))
   end
 
   def unpack(%{"sequence" => sequence, "data" => event_data, "type" => event_type}, commit) do
