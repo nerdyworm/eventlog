@@ -1,6 +1,4 @@
 defmodule Eventlog.Encoder do
-  alias Poison.Decode
-
   def encode(term) do
     term
     |> Poison.encode!()
