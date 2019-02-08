@@ -24,7 +24,7 @@ defmodule Eventlog.ShardReaderTest do
     Application.get_env(:eventlog, :leases)
   end
 
-  def handle_records(_events) do
+  def handle_events(_events) do
     :ok = send(:testing, :ok)
   end
 

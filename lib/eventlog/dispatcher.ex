@@ -2,6 +2,7 @@ defmodule Eventlog.Dispatcher do
   require Logger
 
   @timeout Application.get_env(:eventlog, :timeout, 10_000)
+  @parser Application.get_env(:eventlog, :record_parser, Eventlog.Storage)
 
   def dispatch_records(reader, handler, records) do
     task = Task.Supervisor.async_nolink(

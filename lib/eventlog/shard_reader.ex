@@ -98,8 +98,7 @@ defmodule Eventlog.ShardReader do
   end
 
   defp run(records, %State{consumer: consumer}) do
-    events = Eventlog.Storage.parse_records(records)
-    Dispatcher.dispatch_records(self(), consumer, events)
+    Dispatcher.dispatch_records(self(), consumer, records)
   end
 end
 
