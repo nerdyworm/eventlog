@@ -6,7 +6,7 @@ defmodule Eventlog.Mixfile do
       app: :eventlog,
       version: "0.1.0",
       elixir: "~> 1.5",
-      start_permanent: Mix.env == :prod,
+      start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
   end
@@ -22,12 +22,12 @@ defmodule Eventlog.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:uuid, "~> 1.1" },
+      {:uuid, "~> 1.1"},
       {:ex_aws, "~> 2.0"},
       {:ex_aws_dynamo, "~> 2.0"},
       {:ex_aws_dynamo_streams, "~> 2.0"},
       {:poison, "~> 4.0"},
-      {:hackney, "~> 1.10"},
+      {:hackney, "~> 1.15"}
     ]
   end
 end
